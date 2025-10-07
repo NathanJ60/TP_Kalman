@@ -7,16 +7,20 @@ T = size(groundtruth, 2);
 livedisplay = false;
 
 % TODO: Initial filter state
-X = ...; % (N*1)
-P = ...; % (N*N)
+X = [obspos(1,1); obspos(2,1); 0; 0]; % (N*1) - Position initiale + vitesses nulles
+P = diag([100, 100, 10, 10]); % (N*N) - Grande incertitude initiale
 
 % TODO: Evolution model and covariance of its noise
-A = ...; % (N*N)
-Q = ...; % (N*N)
+A = [1  0  dt  0;
+     0  1  0   dt;
+     0  0  1   0;
+     0  0  0   1]; % (N*N)
+Q = diag([0.01, 0.01, 0.1, 0.1]); % (N*N) - Bruit de processus à ajuster
 
 % TODO: Observation model and covariance of its noise
-C = ...; % (M*N)
-R = ...; % (M*M)
+C = [1  0  0  0;
+     0  1  0  0]; % (M*N) - On observe x et y uniquement
+R = diag([0.5, 0.5]); % (M*M) - Bruit de mesure à ajuster
 
 % Memory for display after filtering
 Xs = zeros(N, T);
@@ -26,17 +30,17 @@ I = eye(N);
 for t = 1:T
     % TODO: Kalman Update
     y = obspos(:, t);
-    K = ...;
-    X = ...;
-    P = ...;
+    K = P * C' * inv(C * P * C' + R);  % Gain de Kalman
+    X = X + K * (y - C * X);           % Correction de l'état
+    P = (I - K * C) * P;               % Correction de la covariance
 
     % Storage
     Xs(:, t) = X;
     Ps(:, :, t) = P;
 
     % TODO: Prediction
-    X = ...;
-    P = ...;
+    X = A * X;              % Prédiction de l'état
+    P = A * P * A' + Q;     % Prédiction de la covariance
 
     % Live display
     if livedisplay
