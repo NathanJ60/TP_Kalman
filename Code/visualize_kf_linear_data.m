@@ -6,7 +6,8 @@ load('kf_linear_data_2.mat');
 disp('=== Informations sur les données ===');
 disp(['Pas de temps (dt): ', num2str(dt), ' s']);
 disp(['Nombre de pas de temps (T): ', num2str(size(groundtruth, 2))]);
-disp(['Variables d''état: ', strjoin(labels, ', ')]);
+disp('Variables d''état:');
+disp(labels);
 disp(' ');
 
 % Figure 1: Trajectoire 2D
