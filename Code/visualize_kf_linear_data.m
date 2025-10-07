@@ -1,4 +1,4 @@
-% Script de visualisation des données brutes
+% Script de visualisation des données brutes - Exercice 1
 clear all;
 load('kf_linear_data_2.mat');
 
